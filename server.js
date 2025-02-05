@@ -53,6 +53,10 @@ app.post("./submit", (req, res)=>{
         totalScore: totalCorrect,
     });
 })
+async function nextQuestion(){
+    let randomCountry = quiz[Math.floor(Math.random()*quiz.length)];
+    currentQuestion= randomCountry;
+}
 
 app.listen(port ,()=>{
     console.log(`server is running at http://localhost:${port} `);
