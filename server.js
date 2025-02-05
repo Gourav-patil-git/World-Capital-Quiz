@@ -23,6 +23,37 @@ db.query("SELECT * FROM CAPITALS" ,(err ,res)=>{
 db.end();
 });
 
+let totalCorrect = 0;
+
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(express.static("public"));
+
+let currentQuestion={};
+
+app.get("/", async(req, res)=>{
+    totalCorrect=0;
+    await nextQuestion();
+    res.render("index.ejs", {question: currentQuestion});
+
+})
+
+app.post("./submit", (req, res)=>{
+    let answer = req.body.answer.trim();
+    let isCorrect = false;
+
+    if(currentQuestion.country.toLowerCase() === answer.toLowerCase()){
+        totalCorrect++;
+        isCorrect = true;
+
+    }
+    nextQuestion();
+    res.render("index.ejs", {
+        question: currentQuestion,
+        wasCorrect: isCorrect,
+        totalScore: totalCorrect,
+    });
+})
+
 app.listen(port ,()=>{
     console.log(`server is running at http://localhost:${port} `);
 })
